@@ -72,7 +72,7 @@
         "name": "少年ジャンプ＋",
         "fileName": "shonen_jump_plus.js",
         "key": "shonen_jump_plus",
-        "version": "1.1.1"
+        "version": "1.1.2"
     },
     {
         "name": "hitomi.la",
@@ -120,13 +120,13 @@
         "name": "Komga",
         "fileName": "komga.js",
         "key": "komga",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     {
         "name": "カドコミ",
         "fileName": "comic_walker.js",
         "key": "comic_walker",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     {
         "name": "漫画1234",
@@ -144,7 +144,7 @@
         "name": "GoDa漫画",
         "fileName": "goda.js",
         "key": "goda",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     {
         "name": "18漫画",

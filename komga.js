@@ -4,7 +4,7 @@ class Komga extends ComicSource {
 
 	key = "komga"
 
-	version = "1.0.0"
+	version = "1.0.1"
 
 	minAppVersion = "1.4.0"
 
@@ -46,13 +46,7 @@ class Komga extends ComicSource {
 		if (stored) {
 			return stored
 		}
-		const username = this.loadSetting('default_username')
-		const password = this.loadSetting('default_password')
-		if (!username || !password) {
-			return null
-		}
-		const encoded = Convert.encodeBase64(Convert.encodeUtf8(`${username}:${password}`))
-		return typeof encoded === 'string' ? encoded : Convert.decodeUtf8(encoded)
+		return null
 	}
 
 	get headers() {

@@ -1,7 +1,7 @@
 class ComicWalker extends ComicSource {
   name = "カドコミ";
   key = "comic_walker";
-  version = "1.0.0";
+  version = "1.0.1";
   minAppVersion = "1.6.0";
   url =
     "https://cdn.jsdelivr.net/gh/venera-app/venera-configs@main/comic_walker.js";
@@ -33,8 +33,12 @@ class ComicWalker extends ComicSource {
       "POST",
     );
 
-    this.saveData("token", res.resources.access_token);
-    return res.resources.access_token;
+    const token = res.resources?.access_token;
+    if (!token) {
+      throw new Error(res.message || "Failed to create anonymous user");
+    }
+    this.saveData("token", token);
+    return token;
   }
 
   async request(url, headers, method = "GET", data) {
@@ -81,8 +85,11 @@ class ComicWalker extends ComicSource {
     const resp = await Network.get(itunes_api);
 
     if (resp.status == 200) {
-      response = JSON.parse(resp.body);
-      this.latestVersion = response.version;
+      const response = JSON.parse(resp.body);
+      const version = response.results?.[0]?.version;
+      if (version) {
+        this.latestVersion = version;
+      }
     }
 
     await this.refreshToken();
