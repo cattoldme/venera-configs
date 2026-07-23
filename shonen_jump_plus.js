@@ -1,16 +1,16 @@
 class ShonenJumpPlus extends ComicSource {
   name = "少年ジャンプ＋";
   key = "shonen_jump_plus";
-  version = "1.1.1";
+  version = "1.1.2";
   minAppVersion = "1.2.1";
   url =
-    "https://cdn.jsdelivr.net/gh/venera-app/venera-configs@main/shonen_jump_plus.js";
+    "https://cdn.jsdelivr.net/gh/cattoldme/venera-configs@main/shonen_jump_plus.js";
 
   deviceId = this.generateDeviceId();
   bearerToken = null;
   userAccountId = null;
   tokenExpiry = 0;
-  latestVersion = "4.0.24";
+  latestVersion = "4.0.36";
 
   get headers() {
     return {
@@ -32,14 +32,14 @@ class ShonenJumpPlus extends ComicSource {
   }
 
   async init() {
-    const url = "https://apps.apple.com/jp/app/id875750302";
-
-    const resp = await Network.get(url);
-
-    const match = resp.body.match(/whats-new__latest__version">[^<]*?([\d.]+)</);
-
-    if (match && match[1]) {
-      this.latestVersion = match[1];
+    const resp = await Network.get(
+      "https://itunes.apple.com/lookup?id=875750302&country=jp",
+    );
+    if (resp.status === 200) {
+      const version = JSON.parse(resp.body).results?.[0]?.version;
+      if (version) {
+        this.latestVersion = version;
+      }
     }
   }
 

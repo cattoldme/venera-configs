@@ -126,11 +126,11 @@ class JComic extends ComicSource {
   name = "jcomic.net";
   key = "jcomic";
 
-  version = "1.0.0";
+  version = "1.0.1";
   minAppVersion = "1.4.6";
 
   url =
-    "https://cdn.jsdelivr.net/gh/venera-app/venera-configs@main/jcomic.js";
+    "https://cdn.jsdelivr.net/gh/cattoldme/venera-configs@main/jcomic.js";
 
   currentComic = null;
 
@@ -452,7 +452,24 @@ class JComic extends ComicSource {
 
       const doc = new HtmlDocument(resp.body);
       const imgs = doc.querySelectorAll("img.comic-thumb");
-      const images = Array.from(imgs).map((img) => img.attributes["src"]);
+      const images = Array.from(imgs)
+        .map((img) => {
+          const src = img.attributes["src"];
+          if (src) return src;
+
+          const locked = img.attributes["data-locked"];
+          const prefix = "JCOMIC_TRAP_";
+          if (!locked || !locked.startsWith(prefix)) return null;
+
+          try {
+            const reversed = locked.slice(prefix.length);
+            const base64 = reversed.split("").reverse().join("");
+            return Convert.decodeUtf8(Convert.decodeBase64(base64));
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
 
       return { images };
     },

@@ -8,12 +8,12 @@ class Goda extends ComicSource {
   // unique id of the source
   key = "goda"
 
-  version = "1.0.0"
+  version = "1.0.1"
 
   minAppVersion = "1.4.0"
 
   // update url
-  url = "https://cdn.jsdelivr.net/gh/venera-app/venera-configs@main/goda.js"
+  url = "https://cdn.jsdelivr.net/gh/cattoldme/venera-configs@main/goda.js"
 
   settings = {
     domains: {
@@ -50,6 +50,60 @@ class Goda extends ComicSource {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0",
       "Referer": this.baseUrl
     };
+  }
+
+  decodeChapterImages(payload) {
+    if (Array.isArray(payload)) {
+      return payload;
+    }
+    if (typeof payload !== "string" || !payload.startsWith("J7r") || !payload.endsWith("nQ")) {
+      throw "Invalid Goda image payload";
+    }
+
+    const body = payload.slice(3, -2);
+    const markerLength = 3;
+    const sentinelLength = 2;
+    const contentLength = body.length - markerLength - sentinelLength;
+    if (contentLength <= 0) {
+      throw "Invalid Goda image payload";
+    }
+
+    const tailLength = Math.floor(contentLength / 3);
+    const firstLength = Math.floor((contentLength - tailLength) / 2);
+    const middleLength = contentLength - tailLength - firstLength;
+    const first = body.slice(0, firstLength);
+    const sentinel = body.slice(firstLength, firstLength + sentinelLength);
+    const middle = body.slice(
+      firstLength + sentinelLength,
+      firstLength + sentinelLength + middleLength
+    );
+    const markerStart = firstLength + sentinelLength + middleLength;
+    const marker = body.slice(markerStart, markerStart + markerLength);
+    const tail = body.slice(markerStart + markerLength);
+    if (sentinel !== "kD" || marker !== "W4s" || tail.length !== tailLength) {
+      throw "Invalid Goda image payload";
+    }
+
+    const packed = tail + first + middle;
+    let restored = "";
+    for (let offset = 0, block = 0; offset < packed.length; offset += 7, block++) {
+      const chunk = packed.slice(offset, offset + 7);
+      restored += block % 2 ? chunk.split("").reverse().join("") : chunk;
+    }
+
+    const encodedAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    const payloadAlphabet = "_-9876543210abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let base64 = "";
+    for (const char of restored) {
+      const index = payloadAlphabet.indexOf(char);
+      if (index < 0) {
+        throw "Invalid Goda image payload";
+      }
+      base64 += encodedAlphabet[index];
+    }
+    base64 = base64.replaceAll("-", "+").replaceAll("_", "/");
+    base64 += "=".repeat((4 - base64.length % 4) % 4);
+    return JSON.parse(Convert.decodeUtf8(Convert.decodeBase64(base64)));
   }
 
   parseComics(doc) {
@@ -314,13 +368,14 @@ class Goda extends ComicSource {
 
     loadEp: async (comicId, epId) => {
       const ids = epId.split("@");
-      const res = await Network.get(`${this.apiUrl}/chapter/getinfo?m=${ids[0]}&c=${ids[1]}`, this.headers);
+      const res = await Network.get(`${this.apiUrl}/v2/chapter/getinfo?m=${ids[0]}&c=${ids[1]}`, this.headers);
       if (res.status !== 200) {
         throw `Invalid status code: ${res.status}`;
       }
       const jsonData = JSON.parse(res.body);
       const images = [];
-      for (let i of jsonData["data"]["info"]["images"]["images"]) {
+      const decodedImages = this.decodeChapterImages(jsonData["data"]["info"]["images"]["images"]);
+      for (let i of decodedImages) {
         images.push(this.imageUrl + i["url"]);
       }
       return { images };
