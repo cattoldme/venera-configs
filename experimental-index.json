@@ -1,0 +1,37 @@
+[
+    {
+        "name": "漫画柜",
+        "fileName": "manhuagui.js",
+        "key": "ManHuaGui",
+        "version": "1.2.1",
+        "description": "可能按出口 IP 或机房网络屏蔽连接"
+    },
+    {
+        "name": "Komiic",
+        "fileName": "komiic.js",
+        "key": "Komiic",
+        "version": "1.0.4",
+        "description": "需要登录"
+    },
+    {
+        "name": "紳士漫畫",
+        "fileName": "wnacg.js",
+        "key": "wnacg",
+        "version": "1.0.5",
+        "description": "可能需要 Cloudflare 人工验证"
+    },
+    {
+        "name": "优酷漫画",
+        "fileName": "ykmh.js",
+        "key": "ykmh",
+        "version": "1.0.0",
+        "description": "可能需要 Cloudflare 人工验证"
+    },
+    {
+        "name": "MANGA Plus",
+        "fileName": "manga_plus.js",
+        "key": "manga_plus",
+        "version": "1.0.0",
+        "description": "官方服务不面向中国地区，需可用国际网络"
+    }
+]
