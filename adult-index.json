@@ -1,0 +1,40 @@
+[
+    {
+        "name": "ehentai",
+        "fileName": "ehentai.js",
+        "key": "ehentai",
+        "version": "1.1.8"
+    },
+    {
+        "name": "hitomi.la",
+        "fileName": "hitomi.js",
+        "key": "hitomi",
+        "version": "1.1.2"
+    },
+    {
+        "name": "禁漫天堂",
+        "fileName": "jm.js",
+        "key": "jm",
+        "version": "1.4.0",
+        "description": "不能使用时请尝试切换分流"
+    },
+    {
+        "name": "jcomic.net",
+        "fileName": "jcomic.js",
+        "key": "jcomic",
+        "version": "1.0.1"
+    },
+    {
+        "name": "GoDa漫画",
+        "fileName": "goda.js",
+        "key": "goda",
+        "version": "1.0.1"
+    },
+    {
+        "name": "Picacg",
+        "fileName": "picacg.js",
+        "key": "picacg",
+        "version": "1.0.6",
+        "description": "需要登录"
+    }
+]
