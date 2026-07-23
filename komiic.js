@@ -16,7 +16,7 @@ class Komiic extends ComicSource {
     minAppVersion = "1.0.0"
 
     // 更新链接
-    url = "https://cdn.jsdelivr.net/gh/venera-app/venera-configs@main/komiic.js"
+    url = "https://cdn.jsdelivr.net/gh/cattoldme/venera-configs@main/komiic.js"
 
     get headers() {
         let token = this.loadData('token')
